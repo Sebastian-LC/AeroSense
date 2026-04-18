@@ -2,8 +2,8 @@ buildscript {
     ext {
         buildToolsVersion = "34.0.0"
         minSdkVersion = 23
-        compileSdkVersion = 34
-        targetSdkVersion = 34
+        compileSdkVersion = 35
+        targetSdkVersion = 35
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.22"
     }
@@ -12,10 +12,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.2.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
         classpath("com.google.gms:google-services:4.3.15")
+    }
+}
+
+subprojects { subproject ->
+    // Fuerza androidx.core a una versión que no requiera compileSdk 35
+    subproject.configurations.all { config ->
+        config.resolutionStrategy.force(
+                "androidx.core:core:1.15.0",
+                "androidx.core:core-ktx:1.15.0"
+        )
     }
 }
 

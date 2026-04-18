@@ -2,8 +2,12 @@
 import {Text, StyleSheet} from 'react-native';
 
 const TrendArrow = ({direction}) => {
-  if (direction === 'up') return <Text style={[styles.arrow, styles.up]}>▲</Text>;
-  if (direction === 'down') return <Text style={[styles.arrow, styles.down]}>▼</Text>;
+  if (direction === 'up') {
+    return <Text style={[styles.arrow, styles.up]}>▲</Text>;
+  }
+  if (direction === 'down') {
+    return <Text style={[styles.arrow, styles.down]}>▼</Text>;
+  }
   return <Text style={[styles.arrow, styles.flat]}>■</Text>;
 };
 

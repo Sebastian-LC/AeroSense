@@ -4,6 +4,8 @@ import {useAirQualityStore} from '../state/useAirQualityStore';
 import RootGradient from '../components/RootGradient';
 import {formatDateLabel} from '../../utils/format';
 
+const Separator = () => <View style={styles.separator} />;
+
 const HistoryScreen = () => {
   const {history, fetchHistory} = useAirQualityStore();
 
@@ -11,21 +13,31 @@ const HistoryScreen = () => {
     fetchHistory();
   }, [fetchHistory]);
 
+  const sortedHistory = (history || []).slice().reverse();
+
   return (
     <RootGradient>
       <View style={styles.container}>
         <Text style={styles.heading}>Historial</Text>
         <FlatList
-          data={[...history].reverse()}
-          keyExtractor={item => String(item.timestamp)}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({item}) => (
-            <View style={styles.item}>
-              <Text style={styles.time}>{formatDateLabel(item.timestamp)}</Text>
-              <Text style={styles.value}>CO₂ {item.co2} ppm</Text>
-              <Text style={styles.value}>PM2.5 {item.pm25} µg/m³</Text>
-            </View>
-          )}
+          data={sortedHistory}
+          keyExtractor={(item, index) =>
+            item?.timestamp ? String(item.timestamp) : String(index)
+          }
+          ItemSeparatorComponent={Separator}
+          renderItem={({item}) =>
+            item ? (
+              <View style={styles.item}>
+                <Text style={styles.time}>
+                  {item.timestamp ? formatDateLabel(item.timestamp) : '--:--'}
+                </Text>
+                <Text style={styles.value}>CO₂ {item.co2 ?? 0} ppm</Text>
+                <Text style={styles.value}>
+                  PM2.5 {item.pm25 ?? 0} µg/m³
+                </Text>
+              </View>
+            ) : null
+          }
         />
       </View>
     </RootGradient>
@@ -34,7 +46,12 @@ const HistoryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, padding: 16},
-  heading: {color: '#e8f1fb', fontSize: 22, fontWeight: '700', marginBottom: 10},
+  heading: {
+    color: '#e8f1fb',
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
   separator: {height: 8},
   item: {
     backgroundColor: '#0f2133',

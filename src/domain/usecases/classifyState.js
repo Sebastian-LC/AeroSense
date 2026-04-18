@@ -1,4 +1,8 @@
-﻿import {LEVELS, CO2_THRESHOLDS, PM25_THRESHOLDS} from '../../constants/thresholds';
+﻿import {
+  LEVELS,
+  CO2_THRESHOLDS,
+  PM25_THRESHOLDS,
+} from '../../constants/thresholds';
 import {createState} from '../models/AirQualityState';
 
 const severityScore = level => {
@@ -15,23 +19,28 @@ const severityScore = level => {
 };
 
 const levelFromValue = (value, thresholds) => {
-  if (value > thresholds.medium) return LEVELS.CRITICAL;
-  if (value >= thresholds.normal) return LEVELS.COGNITIVE;
+  if (value > thresholds.medium) {
+    return LEVELS.CRITICAL;
+  }
+  if (value >= thresholds.normal) {
+    return LEVELS.COGNITIVE;
+  }
   return LEVELS.NORMAL;
 };
 
 export const classifyState = (reading, trend, prevLevel = LEVELS.NORMAL) => {
   const co2Level = levelFromValue(reading.co2, CO2_THRESHOLDS);
   const pmLevel = levelFromValue(reading.pm25, PM25_THRESHOLDS);
-  let level = severityScore(co2Level) >= severityScore(pmLevel)
-    ? co2Level
-    : pmLevel;
+  let level =
+    severityScore(co2Level) >= severityScore(pmLevel) ? co2Level : pmLevel;
 
-  const nextBandCo2 = level === LEVELS.NORMAL ? CO2_THRESHOLDS.normal : CO2_THRESHOLDS.medium;
-  const nextBandPm = level === LEVELS.NORMAL ? PM25_THRESHOLDS.normal : PM25_THRESHOLDS.medium;
+  const nextBandCo2 =
+    level === LEVELS.NORMAL ? CO2_THRESHOLDS.normal : CO2_THRESHOLDS.medium;
+  const nextBandPm =
+    level === LEVELS.NORMAL ? PM25_THRESHOLDS.normal : PM25_THRESHOLDS.medium;
 
   const nearUpperBand =
-    (reading.co2 >= nextBandCo2 * 0.8) || (reading.pm25 >= nextBandPm * 0.8);
+    reading.co2 >= nextBandCo2 * 0.8 || reading.pm25 >= nextBandPm * 0.8;
 
   if (trend?.direction === 'up' && nearUpperBand) {
     // escalate one level if possible

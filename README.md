@@ -1,4 +1,4 @@
-﻿# AirSense – Monitoreo de calidad de aire interior (React Native)
+﻿# AeroSense – Monitoreo de calidad de aire interior (React Native)
 
 Aplicación Android en React Native (JavaScript) con arquitectura limpia (presentation/domain/data), simulación realista de CO₂ y PM2.5 por minuto, clasificación de riesgo con tendencia, visualización en tiempo real, almacenamiento en Firestore y notificaciones FCM en cambios de estado. Preparada para reemplazar la simulación por datos reales (ESP32 vía WiFi/Firebase).
 
@@ -27,7 +27,7 @@ src/
 
 ## Instalación
 ```bash
-cd AirSense
+cd AeroSense
 npm install   # o yarn
 ```
 Dependencias clave: Zustand, React Navigation, react-native-chart-kit + react-native-svg, @react-native-firebase/app|firestore|messaging, @notifee/react-native, seedrandom, date-fns.
@@ -71,5 +71,5 @@ npm run android
 - Mapper Firestore round-trip.
 
 ## Notas
-- Nombre de paquete Android: `com.aersense`.
+- Nombre de paquete Android: `com.aerosense`.
 - Si no hay Firebase configurado, la app sigue funcionando en modo simulación.

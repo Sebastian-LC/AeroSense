@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#1d3347',
-    marginRight: 10,
   },
   title: {color: '#9fb6ce', marginBottom: 8},
   row: {flexDirection: 'row', alignItems: 'center'},

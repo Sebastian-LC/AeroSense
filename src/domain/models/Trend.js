@@ -7,7 +7,13 @@
  * @property {number} streakDown
  */
 
-export const createTrend = (direction = 'flat', co2Slope = 0, pmSlope = 0, streakUp = 0, streakDown = 0) => ({
+export const createTrend = (
+  direction = 'flat',
+  co2Slope = 0,
+  pmSlope = 0,
+  streakUp = 0,
+  streakDown = 0,
+) => ({
   direction,
   co2Slope,
   pmSlope,

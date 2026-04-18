@@ -10,24 +10,63 @@ import {formatTimestamp} from '../../utils/format';
 const DashboardScreen = () => {
   const {currentReading, trend, status, history} = useAirQualityStore();
 
-  const labels = history.slice(-10).map(r => formatTimestamp(r.timestamp));
-  const co2Data = history.slice(-10).map(r => r.co2);
-  const pmData = history.slice(-10).map(r => r.pm25);
+  const lastItems = history.slice(-10);
+  const fullLabels = lastItems.map(r => formatTimestamp(r.timestamp));
+  // Solo mostramos la primera, la del medio y la última etiqueta para evitar superposición
+  const labels = fullLabels.map((l, i) =>
+    i === 0 ||
+    i === Math.floor(fullLabels.length / 2) ||
+    i === fullLabels.length - 1
+      ? l
+      : '',
+  );
+  const co2Data =
+    lastItems.length > 0 ? lastItems.map(r => r.co2) : [0, 0, 0, 0];
+  const pmData =
+    lastItems.length > 0 ? lastItems.map(r => r.pm25) : [0, 0, 0, 0];
 
   return (
     <RootGradient>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.heading}>Dashboard</Text>
         {status ? (
-          <StatusPill label={status.label} color={status.color} message={status.message} />
+          <StatusPill
+            label={status.label}
+            color={status.color}
+            message={status.message}
+          />
         ) : null}
 
         <View style={styles.metricsRow}>
-          <MetricCard title="CO₂" value={currentReading?.co2 ?? 0} unit="ppm" trend={trend} />
-          <MetricCard title="PM2.5" value={currentReading?.pm25 ?? 0} unit="µg/m³" trend={trend} />
+          <MetricCard
+            title="CO₂"
+            value={currentReading?.co2 ?? 0}
+            unit="ppm"
+            trend={trend}
+          />
+          <MetricCard
+            title="PM2.5"
+            value={currentReading?.pm25 ?? 0}
+            unit="µg/m³"
+            trend={trend}
+          />
         </View>
 
-        <LineChartCard labels={labels} co2Data={co2Data} pmData={pmData} />
+        <LineChartCard
+          title="Histórico CO₂"
+          labels={labels}
+          data={co2Data}
+          unit="ppm"
+          color="#e74c3c"
+        />
+
+        <LineChartCard
+          title="Histórico PM2.5"
+          labels={labels}
+          data={pmData}
+          unit="µg/m³"
+          color="#4dabf7"
+        />
       </ScrollView>
     </RootGradient>
   );
@@ -36,7 +75,7 @@ const DashboardScreen = () => {
 const styles = StyleSheet.create({
   container: {padding: 16, gap: 12},
   heading: {color: '#e8f1fb', fontSize: 24, fontWeight: '700'},
-  metricsRow: {flexDirection: 'row'},
+  metricsRow: {flexDirection: 'row', gap: 12},
 });
 
 export default DashboardScreen;

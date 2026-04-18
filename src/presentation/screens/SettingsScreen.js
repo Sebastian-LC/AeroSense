@@ -35,7 +35,7 @@ const SettingsScreen = () => {
           />
         </View>
 
-        <Text style={[styles.heading, {marginTop: 20}]}>Escenario simulado</Text>
+        <Text style={[styles.heading, styles.mt20]}>Escenario simulado</Text>
         <ScenarioSelector selected={scenario} onChange={switchScenario} />
       </View>
     </RootGradient>
@@ -45,6 +45,7 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {flex: 1, padding: 16, gap: 12},
   heading: {color: '#e8f1fb', fontSize: 22, fontWeight: '700'},
+  mt20: {marginTop: 20},
   row: {
     flexDirection: 'row',
     alignItems: 'center',

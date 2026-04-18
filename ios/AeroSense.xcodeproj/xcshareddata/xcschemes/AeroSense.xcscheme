@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "AirSense.app"
-               BlueprintName = "AirSense"
-               ReferencedContainer = "container:AirSense.xcodeproj">
+               BuildableName = "AeroSense.app"
+               BlueprintName = "AeroSense"
+               ReferencedContainer = "container:AeroSense.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "AirSenseTests.xctest"
-               BlueprintName = "AirSenseTests"
-               ReferencedContainer = "container:AirSense.xcodeproj">
+               BuildableName = "AeroSenseTests.xctest"
+               BlueprintName = "AeroSenseTests"
+               ReferencedContainer = "container:AeroSense.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "AirSense.app"
-            BlueprintName = "AirSense"
-            ReferencedContainer = "container:AirSense.xcodeproj">
+            BuildableName = "AeroSense.app"
+            BlueprintName = "AeroSense"
+            ReferencedContainer = "container:AeroSense.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "AirSense.app"
-            BlueprintName = "AirSense"
-            ReferencedContainer = "container:AirSense.xcodeproj">
+            BuildableName = "AeroSense.app"
+            BlueprintName = "AeroSense"
+            ReferencedContainer = "container:AeroSense.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

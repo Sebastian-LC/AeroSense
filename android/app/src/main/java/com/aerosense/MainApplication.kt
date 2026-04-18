@@ -1,4 +1,4 @@
-package com.aersense
+package com.aerosense
 
 import android.app.Application
 import com.facebook.react.PackageList

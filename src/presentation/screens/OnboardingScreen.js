@@ -16,9 +16,13 @@ const OnboardingScreen = ({navigation}) => {
     <RootGradient>
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
-        <Text style={styles.title}>AirSense</Text>
-        <Text style={styles.subtitle}>Monitoreo inteligente de aire interior</Text>
-        <Pressable style={styles.button} onPress={() => navigation.replace('Tabs')}>
+        <Text style={styles.title}>AeroSense</Text>
+        <Text style={styles.subtitle}>
+          Monitoreo inteligente de aire interior
+        </Text>
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.replace('Tabs')}>
           <Text style={styles.buttonText}>Entrar al panel</Text>
         </Pressable>
       </View>
@@ -27,9 +31,19 @@ const OnboardingScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
   title: {fontSize: 32, fontWeight: '700', color: '#e8f1fb', marginBottom: 12},
-  subtitle: {fontSize: 16, color: '#9fb6ce', textAlign: 'center', marginBottom: 32},
+  subtitle: {
+    fontSize: 16,
+    color: '#9fb6ce',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
   button: {
     backgroundColor: '#4dabf7',
     paddingHorizontal: 24,

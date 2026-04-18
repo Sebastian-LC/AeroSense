@@ -1,4 +1,4 @@
-﻿import create from 'zustand';
+﻿import {create} from 'zustand';
 import {SimulationDataSource} from '../../data/datasources/simulation/SimulationDataSource';
 import {FirebaseDataSource} from '../../data/datasources/firebase/FirebaseDataSource';
 import {AirQualityRepositoryImpl} from '../../data/repositories/AirQualityRepositoryImpl';
@@ -11,7 +11,9 @@ import {LEVELS} from '../../constants/thresholds';
 const repository = new AirQualityRepositoryImpl();
 
 const buildDataSource = (type, scenario) => {
-  if (type === 'firebase') return new FirebaseDataSource();
+  if (type === 'firebase') {
+    return new FirebaseDataSource();
+  }
   return new SimulationDataSource(scenario);
 };
 
@@ -26,9 +28,9 @@ export const useAirQualityStore = create((set, get) => ({
   notificationsEnabled: false,
   streamCleanup: null,
 
-  setNotificationsEnabled: (value) => set({notificationsEnabled: value}),
+  setNotificationsEnabled: value => set({notificationsEnabled: value}),
 
-  switchScenario: (scenarioId) => {
+  switchScenario: scenarioId => {
     const {dataSourceType} = get();
     set({scenario: scenarioId});
     if (dataSourceType === 'simulation') {
@@ -36,22 +38,29 @@ export const useAirQualityStore = create((set, get) => ({
     }
   },
 
-  switchDataSource: (type) => {
+  switchDataSource: type => {
     set({dataSourceType: type});
     get().startStream(type, get().scenario);
   },
 
   startStream: (type, scenarioId = DEFAULT_SCENARIO) => {
     const {streamCleanup} = get();
-    if (streamCleanup) streamCleanup();
+    if (streamCleanup) {
+      streamCleanup();
+    }
 
     const source = buildDataSource(type, scenarioId);
 
-    const cleanup = source.subscribe(async (reading) => {
+    const cleanup = source.subscribe(async reading => {
+      console.log(`[DATA] Nueva lectura recibida (${type}):`, reading);
       const {history, status, notificationsEnabled, lastNotifiedStatus} = get();
       const nextHistory = [...history.slice(-499), reading];
       const trend = getTrend(nextHistory, 5, get().trend);
-      const newState = classifyState(reading, trend, status?.level ?? LEVELS.NORMAL);
+      const newState = classifyState(
+        reading,
+        trend,
+        status?.level ?? LEVELS.NORMAL,
+      );
       set({
         currentReading: reading,
         history: nextHistory,
@@ -77,7 +86,9 @@ export const useAirQualityStore = create((set, get) => ({
 
   stopStream: () => {
     const {streamCleanup} = get();
-    if (streamCleanup) streamCleanup();
+    if (streamCleanup) {
+      streamCleanup();
+    }
     set({streamCleanup: null});
   },
 

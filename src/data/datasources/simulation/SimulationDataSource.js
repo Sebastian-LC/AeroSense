@@ -1,7 +1,10 @@
-﻿import {generateSimReading, buildScenarioRng} from '../../../domain/usecases/generateSimReading';
+﻿import {
+  generateSimReading,
+  buildScenarioRng,
+} from '../../../domain/usecases/generateSimReading';
 import {DEFAULT_SCENARIO} from '../../../constants/scenarios';
 
-const TICK_MS = __DEV__ ? 5000 : 60000;
+const TICK_MS = 2000; // Forzado a 2s para la presentación (incluso en Release)
 
 export class SimulationDataSource {
   constructor(scenarioId = DEFAULT_SCENARIO) {
@@ -38,7 +41,9 @@ export class SimulationDataSource {
     }, TICK_MS);
 
     return () => {
-      if (this.timer) clearInterval(this.timer);
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
       this.timer = null;
     };
   }

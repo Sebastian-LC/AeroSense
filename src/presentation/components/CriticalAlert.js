@@ -1,23 +1,40 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Modal, TouchableOpacity, Vibration} from 'react-native';
 import {useAirQualityStore} from '../state/useAirQualityStore';
 import {LEVELS} from '../../constants/thresholds';
 
 const CriticalAlert = () => {
   const {status, currentReading} = useAirQualityStore();
+  const [dismissed, setDismissed] = useState(false);
 
   const isCritical = status?.level === LEVELS.CRITICAL;
 
-  if (isCritical) {
-    Vibration.vibrate([500, 500, 500, 500], true);
-  } else {
+  // Si el estado deja de ser crítico, reseteamos el botón para la próxima vez
+  useEffect(() => {
+    if (!isCritical) {
+      setDismissed(false);
+      Vibration.cancel();
+    }
+  }, [isCritical]);
+
+  // Manejo de vibración
+  useEffect(() => {
+    if (isCritical && !dismissed) {
+      Vibration.vibrate([500, 500, 500, 500], true);
+    } else {
+      Vibration.cancel();
+    }
+  }, [isCritical, dismissed]);
+
+  const handleDismiss = () => {
+    setDismissed(true);
     Vibration.cancel();
-  }
+  };
 
   return (
     <Modal
-      visible={isCritical}
-      animationType="fade"
+      visible={isCritical && !dismissed}
+      animationType="slide"
       transparent={false}
     >
       <View style={styles.container}>
@@ -43,7 +60,7 @@ const CriticalAlert = () => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => Vibration.cancel()}
+            onPress={handleDismiss}
           >
             <Text style={styles.buttonText}>ENTENDIDO</Text>
           </TouchableOpacity>
@@ -60,7 +77,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
@@ -116,6 +133,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 50,
     borderRadius: 30,
+    elevation: 5,
   },
   buttonText: {
     color: '#ff0000',

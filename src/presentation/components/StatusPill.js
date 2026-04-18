@@ -2,7 +2,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 
 const StatusPill = ({label, color, message}) => (
-  <View style={[styles.container, {backgroundColor: color + '22', borderColor: color}]}> 
+  <View
+    style={[
+      styles.container,
+      {backgroundColor: color + '22', borderColor: color},
+    ]}>
     <Text style={[styles.label, {color}]}>{label}</Text>
     {message ? <Text style={styles.message}>{message}</Text> : null}
   </View>
