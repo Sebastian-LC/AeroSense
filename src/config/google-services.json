@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "937506540167",
+    "firebase_url": "https://aerosense-8e090-default-rtdb.firebaseio.com",
+    "project_id": "aerosense-8e090",
+    "storage_bucket": "aerosense-8e090.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937506540167:android:8852cdb40d318c471e0622",
+        "android_client_info": {
+          "package_name": "com.aerosense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeYdZnQnTjLX4_RAEvHccFwC_l9q3D3cM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
