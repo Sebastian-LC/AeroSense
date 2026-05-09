@@ -1,8 +1,8 @@
-﻿// Verificación segura de Firebase sin causar crash si falta el JSON
+﻿// Verificación de Firebase habilitada tras añadir google-services.json
 export const isFirebaseAvailable = () => {
-  return false; // Forzado a false para evitar crashes en Release sin el archivo JSON
+  return true;
 };
 
 export const ensureFirebase = () => {
-  return null;
+  return true;
 };

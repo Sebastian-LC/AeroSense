@@ -8,9 +8,11 @@ const OnboardingScreen = ({navigation}) => {
   const startStream = useAirQualityStore(state => state.startStream);
   useNotifications();
 
+  const dataSourceType = useAirQualityStore(state => state.dataSourceType);
+
   useEffect(() => {
-    startStream('simulation');
-  }, [startStream]);
+    startStream(dataSourceType);
+  }, [startStream, dataSourceType]);
 
   return (
     <RootGradient>

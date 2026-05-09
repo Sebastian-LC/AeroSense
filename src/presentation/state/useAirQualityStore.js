@@ -19,7 +19,7 @@ const buildDataSource = (type, scenario) => {
 
 export const useAirQualityStore = create((set, get) => ({
   scenario: DEFAULT_SCENARIO,
-  dataSourceType: 'simulation',
+  dataSourceType: 'firebase', // Cambiado por defecto a firebase
   currentReading: null,
   history: [],
   trend: null,
