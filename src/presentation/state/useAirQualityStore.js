@@ -67,8 +67,6 @@ export const useAirQualityStore = create((set, get) => ({
         trend,
         status: newState,
       });
-      // Persist simulation to Firestore (best effort)
-      repository.saveReading(reading, newState);
 
       const notifiedLevel = await onStateChangeNotify(
         newState,

@@ -1,7 +1,7 @@
 ﻿import {format} from 'date-fns';
 
 export const formatTimestamp = timestamp => {
-  return format(new Date(timestamp), 'HH:mm');
+  return format(new Date(timestamp), 'HH:mm:ss');
 };
 
 export const formatDateLabel = timestamp => {

@@ -45,12 +45,23 @@ const CriticalAlert = () => {
 
           <View style={styles.dataContainer}>
             <View style={styles.dataBox}>
-              <Text style={styles.label}>CO₂</Text>
-              <Text style={styles.value}>{currentReading?.co2} ppm</Text>
+              <Text style={styles.label}>Gases</Text>
+              <Text style={styles.value}>{currentReading?.gases ?? currentReading?.co2 ?? 0} ppm</Text>
             </View>
             <View style={styles.dataBox}>
               <Text style={styles.label}>PM2.5</Text>
-              <Text style={styles.value}>{currentReading?.pm25} µg/m³</Text>
+              <Text style={styles.value}>{currentReading?.pm25 ?? 0} µg/m³</Text>
+            </View>
+          </View>
+
+          <View style={styles.dataContainer}>
+            <View style={styles.dataBox}>
+              <Text style={styles.label}>PM1</Text>
+              <Text style={styles.value}>{currentReading?.pm1 ?? 0} µg/m³</Text>
+            </View>
+            <View style={styles.dataBox}>
+              <Text style={styles.label}>PM10</Text>
+              <Text style={styles.value}>{currentReading?.pm10 ?? 0} µg/m³</Text>
             </View>
           </View>
 

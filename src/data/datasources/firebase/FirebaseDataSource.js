@@ -2,17 +2,8 @@
 
 export class FirebaseDataSource {
   constructor() {
-    this.ref = database().ref('/air_quality/device_1');
-  }
-
-  async getData() {
-    try {
-      const snapshot = await this.ref.once('value');
-      return this.mapData(snapshot.val());
-    } catch (e) {
-      console.warn('Firebase: Error al obtener datos iniciales', e);
-      return null;
-    }
+    this.path = '/air_quality/device_1';
+    this.ref = database().ref(this.path);
   }
 
   subscribe(callback) {
@@ -28,10 +19,15 @@ export class FirebaseDataSource {
 
   mapData(data) {
     if (!data) return null;
+
     return {
-      co2: data.co2 || 0,
-      pm25: data.pm25 || 0,
-      timestamp: data.timestamp || Date.now(),
+      gases: Number(data.gases || data.co2 || data.CO2 || 0),
+      pm1: Number(data.pm1 || data.PM1 || 0),
+      pm25: Number(data.pm25 || data.pm2_5 || data.PM25 || 0),
+      pm10: Number(data.pm10 || data.PM10 || 0),
+      // CRITICO: Usamos Date.now() del móvil para que el estado 'Activo' sea real e inmediato
+      timestamp: Date.now(),
+      deviceTime: data.timestamp || null
     };
   }
 }

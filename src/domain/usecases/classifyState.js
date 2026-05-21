@@ -1,66 +1,62 @@
-﻿import {
-  LEVELS,
-  CO2_THRESHOLDS,
-  PM25_THRESHOLDS,
-} from '../../constants/thresholds';
+﻿import {LEVELS, THRESHOLDS} from '../../constants/thresholds';
 import {createState} from '../models/AirQualityState';
 
-const severityScore = level => {
-  switch (level) {
-    case LEVELS.CRITICAL:
-      return 3;
-    case LEVELS.COGNITIVE:
-      return 2;
-    case LEVELS.PROGRESSIVE:
-      return 1;
-    default:
-      return 0;
-  }
-};
+let persistenceCounter = 0;
+let pendingLevel = null;
 
-const levelFromValue = (value, thresholds) => {
-  if (value > thresholds.medium) {
-    return LEVELS.CRITICAL;
-  }
-  if (value >= thresholds.normal) {
-    return LEVELS.COGNITIVE;
-  }
-  return LEVELS.NORMAL;
+// REACCIÓN INMEDIATA PARA SUBIDAS, LENTA PARA BAJADAS
+const PERSISTENCE_UP = 1;    // Reacción inmediata al detectar contaminación
+const PERSISTENCE_DOWN = 8;  // Confirmar que el aire realmente se limpió antes de bajar
+
+const getSeverityIndex = (level) => {
+  const order = [LEVELS.NORMAL, LEVELS.PROGRESSIVE, LEVELS.COGNITIVE, LEVELS.CRITICAL];
+  return order.indexOf(level);
 };
 
 export const classifyState = (reading, trend, prevLevel = LEVELS.NORMAL) => {
-  const co2Level = levelFromValue(reading.co2, CO2_THRESHOLDS);
-  const pmLevel = levelFromValue(reading.pm25, PM25_THRESHOLDS);
-  let level =
-    severityScore(co2Level) >= severityScore(pmLevel) ? co2Level : pmLevel;
+  let targetLevel = LEVELS.NORMAL;
+  let currentTriggers = [];
 
-  const nextBandCo2 =
-    level === LEVELS.NORMAL ? CO2_THRESHOLDS.normal : CO2_THRESHOLDS.medium;
-  const nextBandPm =
-    level === LEVELS.NORMAL ? PM25_THRESHOLDS.normal : PM25_THRESHOLDS.medium;
+  const evaluateThreshold = (key) => {
+    const gasValue = reading.gases ?? reading.co2 ?? 0;
+    let found = false;
+    if (gasValue >= THRESHOLDS.GASES[key]) { currentTriggers.push('Gases'); found = true; }
+    if (reading.pm1 >= THRESHOLDS.PM1[key]) { currentTriggers.push('PM1'); found = true; }
+    if (reading.pm25 >= THRESHOLDS.PM25[key]) { currentTriggers.push('PM2.5'); found = true; }
+    if (reading.pm10 >= THRESHOLDS.PM10[key]) { currentTriggers.push('PM10'); found = true; }
+    return found;
+  };
 
-  const nearUpperBand =
-    reading.co2 >= nextBandCo2 * 0.8 || reading.pm25 >= nextBandPm * 0.8;
+  if (evaluateThreshold('CRITICO')) targetLevel = LEVELS.CRITICAL;
+  else if (evaluateThreshold('RIESGO')) targetLevel = LEVELS.COGNITIVE;
+  else if (evaluateThreshold('MODERADO')) targetLevel = LEVELS.PROGRESSIVE;
 
-  if (trend?.direction === 'up' && nearUpperBand) {
-    // escalate one level if possible
-    const currentScore = severityScore(level);
-    if (currentScore < 3) {
-      level = Object.values(LEVELS)[currentScore + 1];
-    }
+  // Si el nivel es el mismo, reseteamos y devolvemos con triggers actuales
+  if (targetLevel === prevLevel) {
+    persistenceCounter = 0;
+    pendingLevel = null;
+    return createState(prevLevel, currentTriggers);
   }
 
-  if (trend?.direction === 'down' && trend?.streakDown >= 3) {
-    const currentScore = severityScore(level);
-    if (currentScore > 0) {
-      level = Object.values(LEVELS)[currentScore - 1];
-    }
+  // Manejo de persistencia para cambios
+  if (targetLevel !== pendingLevel) {
+    pendingLevel = targetLevel;
+    persistenceCounter = 1;
+  } else {
+    persistenceCounter++;
   }
 
-  // prevent oscillation: if small drift, keep previous level unless big jump
-  if (trend?.direction === 'flat') {
-    level = severityScore(level) > severityScore(prevLevel) ? level : prevLevel;
+  const isWorsening = getSeverityIndex(targetLevel) > getSeverityIndex(prevLevel);
+  const requiredCount = isWorsening ? PERSISTENCE_UP : PERSISTENCE_DOWN;
+
+  if (persistenceCounter >= requiredCount) {
+    const finalLevel = pendingLevel;
+    const finalTriggers = [...currentTriggers];
+    persistenceCounter = 0;
+    pendingLevel = null;
+    return createState(finalLevel, finalTriggers);
   }
 
-  return createState(level);
+  // Mientras espera, ya empezamos a mostrar los triggers que causarán el cambio
+  return createState(prevLevel, currentTriggers);
 };

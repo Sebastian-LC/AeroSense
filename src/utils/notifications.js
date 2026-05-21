@@ -1,4 +1,11 @@
-﻿import notifee, {AndroidImportance, AuthorizationStatus, AndroidForegroundServiceType, AndroidCategory, AndroidVisibility} from '@notifee/react-native';
+﻿import notifee, {
+  AndroidImportance,
+  AuthorizationStatus,
+  AndroidForegroundServiceType,
+  AndroidCategory,
+  AndroidVisibility,
+  AndroidStyle,
+} from '@notifee/react-native';
 import {LEVEL_LABELS, LEVEL_COLORS, LEVELS} from '../constants/thresholds';
 
 export const requestNotificationPermission = async () => {
@@ -30,7 +37,7 @@ export const notifyStateChange = async (state, reading, updateOnly = false) => {
     await notifee.displayNotification({
       id: 'air-quality-status',
       title: `Estado: ${LEVEL_LABELS[state.level]}`,
-      body: `CO₂ ${reading.co2} ppm | PM2.5 ${reading.pm25} µg/m³`,
+      body: state.message,
       android: {
         channelId: 'air-quality',
         color: LEVEL_COLORS[state.level],
@@ -41,6 +48,11 @@ export const notifyStateChange = async (state, reading, updateOnly = false) => {
         ongoing: true,
         importance: state.level === LEVELS.CRITICAL ? AndroidImportance.HIGH : AndroidImportance.LOW,
         priority: state.level === LEVELS.CRITICAL ? 'high' : 'low',
+        // Información resumida adicional en el estilo de notificación expandida
+        style: {
+          type: AndroidStyle.BIGTEXT,
+          text: `${state.message}\n\nLecturas actuales:\nGases (MQ135): ${reading.gases} ppm\nPM1: ${reading.pm1} µg/m³\nPM2.5: ${reading.pm25} µg/m³\nPM10: ${reading.pm10} µg/m³`,
+        },
         // Solo activamos comportamiento de alarma si es CRÍTICO
         ...(state.level === LEVELS.CRITICAL ? {
           category: AndroidCategory.ALARM,

@@ -17,23 +17,23 @@ export const generateSimReading = ({scenarioId, prevReading, tick, rng}) => {
   const prev =
     prevReading ||
     createReading({
-      co2: base.co2,
+      gases: base.gases,
       pm25: base.pm25,
     });
 
   const shouldVentilate = tick !== 0 && tick % ventilationEvery === 0;
   const ventilationImpulse = shouldVentilate ? rng() : 0;
 
-  const co2Delta =
-    randomBetween(drift.co2[0], drift.co2[1], rng) + sinusoidal(tick, 12);
+  const gasesDelta =
+    randomBetween(drift.gases[0], drift.gases[1], rng) + sinusoidal(tick, 12);
   const pmDelta =
     randomBetween(drift.pm25[0], drift.pm25[1], rng) +
     sinusoidal(tick, 18) * 0.2;
 
-  const nextCo2 = clamp(
-    prev.co2 + co2Delta - ventilationImpulse * ventilationDrop.co2,
-    base.co2 - 150,
-    max.co2,
+  const nextGases = clamp(
+    prev.gases + gasesDelta - ventilationImpulse * ventilationDrop.gases,
+    base.gases - 100,
+    max.gases,
   );
 
   const nextPm = clamp(
@@ -44,8 +44,10 @@ export const generateSimReading = ({scenarioId, prevReading, tick, rng}) => {
 
   return createReading({
     timestamp: Date.now(),
-    co2: Number(nextCo2.toFixed(1)),
+    gases: Number(nextGases.toFixed(1)),
+    pm1: Number((nextPm * 0.6).toFixed(1)), // Estimación simulación
     pm25: Number(nextPm.toFixed(1)),
+    pm10: Number((nextPm * 1.8).toFixed(1)), // Estimación simulación
   });
 };
 

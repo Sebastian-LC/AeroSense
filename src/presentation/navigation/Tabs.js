@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text} from 'react-native';
+import {Text, Platform} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import DashboardScreen from '../screens/DashboardScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import SensorsScreen from '../screens/SensorsScreen';
@@ -14,13 +15,15 @@ const TabIcon = ({icon, color, focused}) => (
       color: color,
       fontSize: 20,
       fontWeight: focused ? 'bold' : 'normal',
-      marginTop: 4,
+      marginTop: 4, // Eliminamos el margen superior para que el icono suba
     }}>
     {icon}
   </Text>
 );
 
 const Tabs = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -28,12 +31,16 @@ const Tabs = () => {
         tabBarStyle: {
           backgroundColor: '#0f2133',
           borderTopColor: '#1d3347',
-          height: 60,
-          paddingBottom: 8,
+          height: Platform.OS === 'android' ? 100 : 88,
+          paddingBottom: Platform.OS === 'android' ? 25 : (insets.bottom > 0 ? insets.bottom : 10),
         },
         tabBarActiveTintColor: '#4dabf7',
         tabBarInactiveTintColor: '#9fb6ce',
-        tabBarLabelStyle: {fontSize: 12, fontWeight: '500'},
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          marginBottom: Platform.OS === 'android' ? 8 : 0,
+        },
       }}>
       <Tab.Screen
         name="Dashboard"
